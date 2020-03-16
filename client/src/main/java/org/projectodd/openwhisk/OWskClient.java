@@ -29,6 +29,9 @@ public class OWskClient {
         }
         client.setUserAgent("Incubating Apache OpenWhisk Java client");
         client.setDebugging(configuration.isDebugging());
+        client.setConnectTimeout(configuration.getHttpConnectTimeout());
+        client.setReadTimeout(configuration.getHttpReadTimeout());
+        client.setWriteTimeout(configuration.getHttpWriteTimeout());
     }
 
     public Configuration getConfiguration() {

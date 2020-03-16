@@ -11,6 +11,7 @@ public class Configuration {
     private static final String API_PORT = "APIPORT";
     private static final int DEFAULT_PORT = 443;
     private static final int DEFAULT_TIMEOUT = 30000;
+    private static final int DEFAULT_HTTP_TIMEOUT = 5000;
     private static final String AUTH = "AUTH";
     private static final String DEFAULT_NAMESPACE = "_";
     private static final String DEFAULT_PROPS = ".wskprops";
@@ -25,12 +26,16 @@ public class Configuration {
     private boolean debugging = false;
     private boolean insecure = false;
     private int timeout = DEFAULT_TIMEOUT;
+    private int httpConnectTimeout = DEFAULT_HTTP_TIMEOUT;
+    private int httpReadTimeout = DEFAULT_HTTP_TIMEOUT;
+    private int httpWriteTimeout = DEFAULT_HTTP_TIMEOUT;
 
     private Configuration() {
     }
 
     private Configuration(final String host, final int port, final String auth, final String namespace, final String actionPackage,
-                          boolean debugging, boolean insecure, final int timeout) {
+                          boolean debugging, boolean insecure, final int timeout,
+                          final int httpConnectTimeout, final int httpReadTimeout, final int httpWriteTimeout) {
         this.host = host;
         this.port = port;
         this.auth = auth;
@@ -39,6 +44,9 @@ public class Configuration {
         this.debugging = debugging;
         this.insecure = insecure;
         this.timeout = timeout;
+        this.httpConnectTimeout = httpConnectTimeout;
+        this.httpReadTimeout = httpReadTimeout;
+        this.httpWriteTimeout = httpWriteTimeout;
     }
 
     public String getHost() {
@@ -67,6 +75,18 @@ public class Configuration {
 
     public String getActionPackage() {
         return actionPackage;
+    }
+    
+    public int getHttpConnectTimeout() {
+        return httpConnectTimeout;
+    }
+    
+    public int getHttpReadTimeout() {
+        return httpReadTimeout;
+    }
+
+    public int getHttpWriteTimeout() {
+        return httpWriteTimeout;
     }
 
     public static Configuration load() {
@@ -115,6 +135,9 @@ public class Configuration {
         private String auth;
         private String namespace = DEFAULT_NAMESPACE;
         private String actionPackage = DEFAULT_ACTION_PACKAGE;
+        private int httpConnectTimeout = DEFAULT_HTTP_TIMEOUT;
+        private int httpReadTimeout = DEFAULT_HTTP_TIMEOUT;
+        private int httpWriteTimeout = DEFAULT_HTTP_TIMEOUT;
 
         public Builder() {
         }
@@ -126,6 +149,9 @@ public class Configuration {
             namespace = configuration.namespace;
             actionPackage = configuration.actionPackage;
             insecure = configuration.insecure;
+            httpConnectTimeout = configuration.httpConnectTimeout;
+            httpReadTimeout = configuration.httpReadTimeout;
+            httpWriteTimeout = configuration.httpWriteTimeout;
         }
 
         public Builder host(String host) {
@@ -147,8 +173,24 @@ public class Configuration {
             this.port = port;
             return this;
         }
+        
         public Builder timeout(int timeout) {
             this.timeout = timeout;
+            return this;
+        }
+        
+        public Builder httpConnectTimeout(int httpConnectTimeout) {
+            this.httpConnectTimeout = httpConnectTimeout;
+            return this;
+        }
+        
+        public Builder httpReadTimeout(int httpReadTimeout) {
+            this.httpReadTimeout = httpReadTimeout;
+            return this;
+        }
+        
+        public Builder httpWriteTimeout(int httpWriteTimeout) {
+            this.httpWriteTimeout = httpWriteTimeout;
             return this;
         }
 
@@ -168,7 +210,10 @@ public class Configuration {
         }
 
         public Configuration build() {
-            return new Configuration(host, port, auth, namespace, actionPackage, debugging, insecure, timeout);
+            return new Configuration(host, port, auth, namespace, actionPackage, debugging, insecure, timeout,
+                    httpConnectTimeout, httpReadTimeout, httpWriteTimeout);
         }
     }
+
+    
 }
